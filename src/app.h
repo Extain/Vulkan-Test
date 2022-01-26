@@ -4,6 +4,7 @@
 #include "pipeline.h"
 #include "device.h"
 #include "swapchain.h"
+#include "model.h"
 
 #include <memory>
 #include <vector>
@@ -25,6 +26,7 @@ namespace Engine
         void run();
 
     private:
+        void loadModels();
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
@@ -40,5 +42,6 @@ namespace Engine
 
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;
+        std::unique_ptr<Model> model;
     };
 }

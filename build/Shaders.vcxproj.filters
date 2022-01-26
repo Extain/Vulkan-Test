@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\lenns\Documents\C++ Projects\Vulkan Test\build\CMakeFiles\27a9d4d6a5c097c78bd19d6e498c4985\simple_shader.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\lenns\Documents\C++ Projects\Vulkan Test\build\CMakeFiles\27a9d4d6a5c097c78bd19d6e498c4985\simple_shader.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\lenns\Documents\C++ Projects\Vulkan Test\build\CMakeFiles\b7d4087ee2c99f538f52c40ed9e49f2b\Shaders.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\lenns\Documents\C++ Projects\Vulkan Test\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\lenns\Documents\C++ Projects\Vulkan Test\build\CMakeFiles\Shaders" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{60106198-5B89-320C-960F-E0DF04CF9254}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

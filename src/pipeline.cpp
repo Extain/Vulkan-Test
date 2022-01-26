@@ -94,7 +94,7 @@ namespace Engine
         pipelineInfo.pMultisampleState = &info.multisampleInfo;
 
         pipelineInfo.pColorBlendState = &info.colorBlendInfo;
-        pipelineInfo.pDynamicState = nullptr;
+        pipelineInfo.pDynamicState = &info.dynamicStateInfo;
 
         pipelineInfo.layout = info.pipelineLayout;
         pipelineInfo.renderPass = info.renderPass;
@@ -127,7 +127,7 @@ namespace Engine
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
     }
 
-    void Pipeline::defaultPipelineConfigInfo(PipelineConfigInfo &configInfo, uint32_t width, uint32_t height)
+    void Pipeline::defaultPipelineConfigInfo(PipelineConfigInfo &configInfo)
     {
         // First Stage of Pipeline.
         // Takes in input and groups them into geometry.
@@ -137,25 +137,11 @@ namespace Engine
         configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
         configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
 
-        // Describes the transformation between pipeline output and target image.
-        // tells our pipeline how we want to transform our gl_Position values to the image.
-        configInfo.viewport.x = 0.0f;
-        configInfo.viewport.y = 0.0f;
-        configInfo.viewport.width = static_cast<float>(width);
-        configInfo.viewport.height = static_cast<float>(height);
-        // Max range for the viewPort;
-        configInfo.viewport.minDepth = 0.0f;
-        configInfo.viewport.maxDepth = 1.0f;
-
-        // Any pixels outside of the scissor rectangle it cuts them out of the image.
-        configInfo.scissor.offset = {0, 0};
-        configInfo.scissor.extent = {width, height};
-
         configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
         configInfo.viewportInfo.viewportCount = 1;
-        configInfo.viewportInfo.pViewports = &configInfo.viewport;
+        configInfo.viewportInfo.pViewports = nullptr;
         configInfo.viewportInfo.scissorCount = 1;
-        configInfo.viewportInfo.pScissors = &configInfo.scissor;
+        configInfo.viewportInfo.pScissors = nullptr;
 
         // This stage breaks up the geometry into fragments for each pixel or triangle overlaps.
         configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -213,5 +199,11 @@ namespace Engine
         configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
         configInfo.depthStencilInfo.front = {}; // Optional
         configInfo.depthStencilInfo.back = {};  // Optional
+
+        configInfo.dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+        configInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+        configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
+        configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
+        configInfo.dynamicStateInfo.flags = 0;
     }
 }

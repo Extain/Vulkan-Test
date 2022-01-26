@@ -62,7 +62,7 @@ namespace Engine
         pipeline = std::make_unique<Pipeline>(device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
     }
 
-    void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> &gameObjects)
+    void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> &gameObjects, const Camera &camera)
     {
         pipeline->bind(commandBuffer);
 
@@ -72,7 +72,7 @@ namespace Engine
             obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.01f, glm::two_pi<float>());
             SimplePushConstantData push{};
             push.color = obj.color;
-            push.transform = obj.transform.mat4();
+            push.transform = camera.getProjection() * obj.transform.mat4();
 
             vkCmdPushConstants(commandBuffer,
                                pipelineLayout,
@@ -80,6 +80,7 @@ namespace Engine
                                0,
                                sizeof(SimplePushConstantData),
                                &push);
+                               
             obj.model->bind(commandBuffer);
             obj.model->draw(commandBuffer);
         }

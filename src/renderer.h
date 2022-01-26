@@ -39,6 +39,8 @@ namespace Engine
 
         VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
 
+        float getAspectRatio() const { return swapChain->extentAspectRatio(); }
+
         int getFrameIndex() const
         {
             assert(isFrameStarted && "Cannot get frames when frame not in progress!");

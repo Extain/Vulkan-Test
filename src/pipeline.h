@@ -10,6 +10,7 @@ namespace Engine
 {
     struct PipelineConfigInfo
     {
+        PipelineConfigInfo() = default;
         PipelineConfigInfo(const PipelineConfigInfo &) = delete;
         PipelineConfigInfo &operator=(const PipelineConfigInfo &) = delete;
 

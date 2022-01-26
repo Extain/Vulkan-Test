@@ -83,7 +83,7 @@ namespace Engine
         vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
-
+        
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
         pipelineInfo.pStages = shaderStages;
@@ -92,10 +92,9 @@ namespace Engine
         pipelineInfo.pViewportState = &info.viewportInfo;
         pipelineInfo.pRasterizationState = &info.rasterizationInfo;
         pipelineInfo.pMultisampleState = &info.multisampleInfo;
-
         pipelineInfo.pColorBlendState = &info.colorBlendInfo;
+        pipelineInfo.pDepthStencilState = &info.depthStencilInfo;
         pipelineInfo.pDynamicState = &info.dynamicStateInfo;
-
         pipelineInfo.layout = info.pipelineLayout;
         pipelineInfo.renderPass = info.renderPass;
         pipelineInfo.subpass = info.subpass;

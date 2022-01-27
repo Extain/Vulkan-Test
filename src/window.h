@@ -23,6 +23,8 @@ namespace Engine
         void resetWindowResizedFlag() { framebufferResized = false; }
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
+        GLFWwindow *getGLFWwindow() const { return window; }
+
         VkExtent2D getExtent() { return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
     private:
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height);

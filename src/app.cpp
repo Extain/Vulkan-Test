@@ -1,10 +1,12 @@
 #include "app.h"
 
+#include "keyboard_movement_controller.h"
 #include "simple_render_system.h"
 #include "camera.h"
 
 #include <stdexcept>
 #include <array>
+#include <chrono>
 
 namespace Engine
 {
@@ -24,13 +26,25 @@ namespace Engine
         //camera.setViewDirection(glm::vec3{0.0f}, glm::vec3(0.5f, 0.0f, 1.0f));
         camera.setViewTarget(glm::vec3(-50.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
+        auto viewerObject = GameObject::createGameObject();
+        KeyboardMovementController cameraController{};
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+
         while (!window.shouldClose())
         {
             glfwPollEvents();
 
-            float aspect = renderer.getAspectRatio();
+            auto newTime = std::chrono::high_resolution_clock::now();
 
-            //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+            float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+            currentTime = newTime;
+
+            cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+            camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
+            float aspect = renderer.getAspectRatio();
+            
             camera.setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
 
             if (auto commandBuffer = renderer.beginFrame())

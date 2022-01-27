@@ -35,6 +35,6 @@ namespace Engine
 
         std::vector<GameObject> gameObjects;
 
-        const float MAX_FRAME_TIME = 0.4;
+        const float MAX_FRAME_TIME = 0.4f;
     };
 }

@@ -1,4 +1,5 @@
 set(GLFW_PATH  lib/glfw-3.3.6)
 set(GLM_PATH  lib/glm)
 set(VULKAN_SDK_PATH  "C:/VulkanSDK/1.2.198.1")
+set(TINYOBJ_PATH lib/tinyobjloader)
 # set(MINGW_PATH "C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64")

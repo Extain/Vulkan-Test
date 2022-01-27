@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <array>
 #include <chrono>
+#include <iostream>
 
 namespace Engine
 {
@@ -40,11 +41,15 @@ namespace Engine
             float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
             currentTime = newTime;
 
+            frameTime = glm::min(frameTime, MAX_FRAME_TIME);
+
+            std::cout << "Frame Time: " << frameTime << std::endl;
+
             cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
             camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
             float aspect = renderer.getAspectRatio();
-            
+
             camera.setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
 
             if (auto commandBuffer = renderer.beginFrame())

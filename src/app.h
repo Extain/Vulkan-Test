@@ -34,5 +34,7 @@ namespace Engine
         Renderer renderer{window, device};
 
         std::vector<GameObject> gameObjects;
+
+        const float MAX_FRAME_TIME = 0.4;
     };
 }

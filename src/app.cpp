@@ -67,7 +67,7 @@ namespace Engine
 
             float aspect = renderer.getAspectRatio();
 
-            camera.setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
+            camera.setPerspectiveProjection(glm::radians(50.0f), aspect, 0.01f, 100.0f);
 
             if (auto commandBuffer = renderer.beginFrame())
             {

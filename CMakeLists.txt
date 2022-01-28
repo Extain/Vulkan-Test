@@ -83,7 +83,7 @@ if (WIN32)
   endif()
 
   target_include_directories(${PROJECT_NAME} PUBLIC
-    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/include
     ${Vulkan_INCLUDE_DIRS}
     ${TINYOBJ_PATH}
     ${GLFW_INCLUDE_DIRS}

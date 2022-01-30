@@ -21,6 +21,10 @@ namespace Engine
 
     App::App()
     {
+        globalPool = DescriptorPool::Builder(device)
+                         .setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
+                         .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
+                         .build();
         loadGameObjects();
     }
 
@@ -28,17 +32,27 @@ namespace Engine
 
     void App::run()
     {
-        Buffer globalUboBuffer{
-            device,
-            sizeof(GlobalUbo),
-            SwapChain::MAX_FRAMES_IN_FLIGHT,
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-            device.properties.limits.minUniformBufferOffsetAlignment};
+        std::vector<std::unique_ptr<Buffer>> uboBuffers(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < uboBuffers.size(); i++)
+        {
+            uboBuffers[i] = std::make_unique<Buffer>(device,
+                                                     sizeof(GlobalUbo),
+                                                     1,
+                                                     VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                                                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+            uboBuffers[i]->map();
+        }
 
-        globalUboBuffer.map();
+        auto globalSetLayout = DescriptorSetLayout::Builder(device).addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT).build();
 
-        SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
+        std::vector<VkDescriptorSet> globalDescriptorSet(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < globalDescriptorSet.size(); i++)
+        {
+            auto bufferInfo = uboBuffers[i]->descriptorInfo();
+            DescriptorWriter(*globalSetLayout, *globalPool).writeBuffer(0, &bufferInfo).build(globalDescriptorSet[i]);
+        }
+
+        SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
         Camera camera{};
 
         //camera.setViewDirection(glm::vec3{0.0f}, glm::vec3(0.5f, 0.0f, 1.0f));
@@ -72,17 +86,13 @@ namespace Engine
             if (auto commandBuffer = renderer.beginFrame())
             {
                 int frameIndex = renderer.getFrameIndex();
-                FrameInfo frameInfo{
-                    frameIndex,
-                    frameTime,
-                    commandBuffer,
-                    camera};
+                FrameInfo frameInfo{frameIndex, frameTime, commandBuffer, camera, globalDescriptorSet[frameIndex]};
 
                 // Update
                 GlobalUbo ubo{};
                 ubo.projectionView = camera.getProjection() * camera.getView();
-                globalUboBuffer.writeToIndex(&ubo, frameIndex);
-                globalUboBuffer.flushIndex(frameIndex);
+                uboBuffers[frameIndex]->writeToBuffer(&ubo);
+                uboBuffers[frameIndex]->flush();
 
                 // Render
                 renderer.beginSwapChainRenderPass(commandBuffer);

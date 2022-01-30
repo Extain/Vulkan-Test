@@ -5,6 +5,7 @@
 #include "gameObject.h"
 #include "model.h"
 #include "renderer.h"
+#include "descriptors.h"
 
 #include <memory>
 #include <vector>
@@ -32,6 +33,8 @@ namespace Engine
         Device device{window};
 
         Renderer renderer{window, device};
+
+        std::unique_ptr<DescriptorPool> globalPool{};
 
         std::vector<GameObject> gameObjects;
 
